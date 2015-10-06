@@ -11,3 +11,5 @@
 * Use as CLI
 * Documentation
 * Rubycop
+* print Windows output
+* provisioning example
