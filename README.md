@@ -1,5 +1,11 @@
 # ievms-ruby
 
+## Working
+* works with Windows 7
+* upload to machine
+* execute on machine
+* execute as admin on machine
+
 ## TODO
 
 * make Gem
