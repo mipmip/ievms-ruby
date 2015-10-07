@@ -1,18 +1,16 @@
 #!/usr/bin/env ruby
+require 'bundler/setup'
 require 'ievms/windows_guest'
 require 'thor'
-#require 'pp'
-
 
 class IevmsRb < Thor
 
-  desc "cat [vbox name] [filename]", "cat Guest Window file"
+  desc "cat [vbox name] [filename]", "cat file in VBox guest"
   def cat(vbox_name,guest_path)
-
     init vbox_name
-    p guest_path
 
-
+    print @machine.download_string_from_file_to_guest guest_path, true
+    print "\n"
   end
 
   private
@@ -20,7 +18,6 @@ class IevmsRb < Thor
   def init vbox_name
     @machine = Ievms::WindowsGuest.new vbox_name
   end
-
-
-
 end
+
+IevmsRb.start(ARGV)

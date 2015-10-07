@@ -4,14 +4,14 @@ require 'fileutils'
 require 'tempfile'
 
 # VM admin username
-USERNAME='IEUser'
+USERNAME = 'IEUser'
 # VM admin user password
-PASSWD='Passw0rd!'
+PASSWD = 'Passw0rd!'
 
 # IEVMS directory
 IEVMS_HOME = ENV['HOME']+'/.ievms'
 
-
+# ievms interface
 module Ievms
   class WindowsGuest
     attr_accessor :verbose
@@ -25,26 +25,64 @@ module Ievms
     end
 
     # Copy a file to the virtual machine from the ievms home folder.
-    def copy_to_vm src ,dest
-      print "Copying #{src} to #{dest}\n"
+    def copy_to_vm(src ,dest, quiet=false)
+      print "Copying #{src} to #{dest}\n" unless quiet
       guestcontrol_exec "cmd.exe", "cmd.exe /c copy \"E:\\#{src}\" \"#{dest}\""
     end
 
-    def upload_file_to_guest(local_path, guest_path)
+    # Copy a file to the virtual machine from the ievms home folder.
+    def copy_from_vm(src ,dest, quiet=false)
+      print "Copying #{src} to #{dest}\n" unless quiet
+      guestcontrol_exec "cmd.exe", "cmd.exe /c copy \"#{src}\" \"E:\\#{dest}\""
+    end
 
-      # 1 copy to tmp location in .ievms
-      FileUtils.cp local_path, File.join(IEVMS_HOME,File.basename(local_path))
+    def download_file_from_guest(guest_path, local_path, quiet=false)
 
-      # 2 run cp command in machine
-      copy_to_vm File.basename(local_path), guest_path
+      # 1 run cp command in machine
+      copy_from_vm guest_path, File.basename(local_path), quiet
+
+      # 2 copy to tmp location in .ievms
+      FileUtils.cp File.join(IEVMS_HOME,File.basename(local_path)), local_path
 
       # 3 remove tmp file in .ievms
       FileUtils.rm File.join(IEVMS_HOME,File.basename(local_path))
     end
 
+    # Upload a local file to the windows guest
+    def upload_file_to_guest(local_path, guest_path, quiet=false)
+
+      # 1 copy to tmp location in .ievms
+      FileUtils.cp local_path, File.join(IEVMS_HOME,File.basename(local_path))
+
+      # 2 run cp command in machine
+      copy_to_vm File.basename(local_path), guest_path, quiet
+
+      # 3 remove tmp file in .ievms
+      FileUtils.rm File.join(IEVMS_HOME,File.basename(local_path))
+    end
+
+    def download_string_from_file_to_guest( guest_path, quiet=false)
+      copy_from_vm guest_path, 'tmpfile.txt', quiet
+      string = IO.read(File.join(IEVMS_HOME,'tmpfile.txt'))
+      FileUtils.rm File.join(IEVMS_HOME,'tmpfile.txt')
+      string
+    end
+
+    def upload_string_as_file_to_guest(string, guest_path, quiet=false)
+
+      tmp = Tempfile.new('txtfile')
+      tmp.write "#{string}\n"
+      path = tmp.path
+      tmp.rewind
+      tmp.close
+
+      upload_file_to_guest(path, guest_path, true)
+      FileUtils.rm path
+    end
+
     # execute existibg batch file in Windows guest as Administrator
-    def run_bat_as_admin(guest_path)
-      print "Executing batch file as administrator: #{guest_path}\n"
+    def run_bat_as_admin(guest_path, quiet=false)
+      print "Executing batch file as administrator: #{guest_path}\n" unless quiet
 
       guestcontrol_exec "cmd.exe", "cmd.exe /c \"echo #{guest_path} > C:\\Users\\IEUser\\ievms.bat\""
       guestcontrol_exec "schtasks.exe", "schtasks.exe /run /tn ievms"
@@ -52,52 +90,55 @@ module Ievms
     end
 
     # execute existibg batch file in Windows guest as Administrator
-    def run_command_as_admin(command)
-      print "Executing command as administrator: #{command}\n"
+    def run_command_as_admin(command,quiet=false)
+      print "Executing command as administrator: #{command}\n" unless quiet
 
-      run_command 'if exist C:\Users\IEUser\ievms.bat del C:\Users\IEUser\ievms.bat && Exit'
+      run_command 'if exist C:\Users\IEUser\ievms.bat del C:\Users\IEUser\ievms.bat && Exit', true
 
-      #move to method
-      tmp = Tempfile.new('ievms.bat')
-      tmp.write "#{command}\n"
-      path = tmp.path
-      tmp.rewind
-      tmp.close
-      upload_file_to_guest(path, 'C:\Users\IEUser\ievms.bat')
-      FileUtils.rm path
+      upload_string_as_file_to_guest(command, 'C:\Users\IEUser\ievms.bat', true)
 
       guestcontrol_exec "schtasks.exe", "schtasks.exe /run /tn ievms"
 
+      while schtasks_query_ievms.include? 'Running'
+        print "."
+        sleep 2
+      end
+      print "\n"
     end
 
     # execute existing batch file in Windows guest
-    def run_command command
-      print "Executing command: #{command}\n"
+    def run_command(command, quiet=false)
+      print "Executing command: #{command}\n" unless quiet
       out, _, _ = guestcontrol_exec "cmd.exe", "cmd.exe /c \"#{command}\""
-      return out
+      out
     end
 
     # execute existibg batch file in Windows guest
-    def run_bat guest_path
-      print "Executing batch file: #{guest_path}\n"
+    def run_bat(guest_path, quiet=false)
+      print "Executing batch file: #{guest_path}\n" unless quiet
       out, _, _ = guestcontrol_exec "cmd.exe", "cmd.exe /c \"#{guest_path}\""
-      return out
+      out
+    end
+
+    def schtasks_query_ievms
+      out, _, _ = guestcontrol_exec "schtasks.exe", "schtasks.exe /query /tn ievms"
+      out
     end
 
     private
 
     # execute final guest control shell cmd
     # returns [stdout,stderr,status] from capture3
-    def guestcontrol_exec image, cmd
+    def guestcontrol_exec(image, cmd)
       wait_for_guestcontrol(@vbox_name)
       cmd = "VBoxManage guestcontrol \"#{@vbox_name}\" run --username \"#{USERNAME}\" --password '#{PASSWD}' --exe \"#{image}\" -- #{cmd}"
-      #print cmd + "\n"
+    #  print cmd + "\n"
       return Open3.capture3(cmd)
     end
 
     # function taken from ievms
     # Pause execution until guest control is available for a virtual machine
-    def wait_for_guestcontrol vboxname
+    def wait_for_guestcontrol(vboxname)
       run_level = 0
       while run_level < 3 do
         print "Waiting for #{vboxname} to be available for guestcontrol...\n" if @verbose
@@ -110,7 +151,7 @@ module Ievms
     end
 
     # Is it a virtual machine in VirtualBox?
-    def is_vm vboxname
+    def is_vm(vboxname)
       cmd = "VBoxManage showvminfo \"#{vboxname}\""
 
       _, stderr, _ = Open3.capture3(cmd)
