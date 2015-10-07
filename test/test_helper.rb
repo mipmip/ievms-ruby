@@ -9,8 +9,8 @@ require 'minitest'
 require 'minitest/unit'
 require 'minitest/autorun'
 require 'minitest/pride'
-require 'base64'
+#require 'base64'
 
-tempdir = File.join(File.dirname(__FILE__), 'tmpout')
-FileUtils.rm_rf(Dir.glob(tempdir+'/*'))
+#tempdir = File.join(File.dirname(__FILE__), 'tmpout')
+#FileUtils.rm_rf(Dir.glob(tempdir+'/*'))
 

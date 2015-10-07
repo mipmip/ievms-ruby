@@ -1,6 +1,7 @@
 require "ievms/version"
 require 'open3'
 require 'fileutils'
+require 'tempfile'
 
 # VM admin username
 USERNAME='IEUser'
@@ -13,13 +14,14 @@ IEVMS_HOME = ENV['HOME']+'/.ievms'
 
 module Ievms
   class WindowsGuest
+    attr_accessor :verbose
+
+    @verbose = false
 
     def initialize(vbox_name)
       @vbox_name = vbox_name
 
       is_vm vbox_name
-      wait_for_guestcontrol(vbox_name)
-
     end
 
     # Copy a file to the virtual machine from the ievms home folder.
@@ -42,26 +44,55 @@ module Ievms
 
     # execute existibg batch file in Windows guest as Administrator
     def run_bat_as_admin(guest_path)
-      print "Executing as administrator #{guest_path}\n"
+      print "Executing batch file as administrator: #{guest_path}\n"
 
       guestcontrol_exec "cmd.exe", "cmd.exe /c \"echo #{guest_path} > C:\\Users\\IEUser\\ievms.bat\""
       guestcontrol_exec "schtasks.exe", "schtasks.exe /run /tn ievms"
 
     end
 
+    # execute existibg batch file in Windows guest as Administrator
+    def run_command_as_admin(command)
+      print "Executing command as administrator: #{command}\n"
+
+      run_command 'if exist C:\Users\IEUser\ievms.bat del C:\Users\IEUser\ievms.bat && Exit'
+
+      #move to method
+      tmp = Tempfile.new('ievms.bat')
+      tmp.write "#{command}\n"
+      path = tmp.path
+      tmp.rewind
+      tmp.close
+      upload_file_to_guest(path, 'C:\Users\IEUser\ievms.bat')
+      FileUtils.rm path
+
+      guestcontrol_exec "schtasks.exe", "schtasks.exe /run /tn ievms"
+
+    end
+
+    # execute existing batch file in Windows guest
+    def run_command command
+      print "Executing command: #{command}\n"
+      out, _, _ = guestcontrol_exec "cmd.exe", "cmd.exe /c \"#{command}\""
+      return out
+    end
+
     # execute existibg batch file in Windows guest
     def run_bat guest_path
-      print "Executing #{guest_path}\n"
-      guestcontrol_exec "cmd.exe", "cmd.exe /c \"#{guest_path}\""
+      print "Executing batch file: #{guest_path}\n"
+      out, _, _ = guestcontrol_exec "cmd.exe", "cmd.exe /c \"#{guest_path}\""
+      return out
     end
 
     private
 
     # execute final guest control shell cmd
+    # returns [stdout,stderr,status] from capture3
     def guestcontrol_exec image, cmd
+      wait_for_guestcontrol(@vbox_name)
       cmd = "VBoxManage guestcontrol \"#{@vbox_name}\" run --username \"#{USERNAME}\" --password '#{PASSWD}' --exe \"#{image}\" -- #{cmd}"
-      print cmd + "\n"
-      _, _, _ = Open3.capture3(cmd)
+      #print cmd + "\n"
+      return Open3.capture3(cmd)
     end
 
     # function taken from ievms
@@ -69,7 +100,7 @@ module Ievms
     def wait_for_guestcontrol vboxname
       run_level = 0
       while run_level < 3 do
-        print "Waiting for #{vboxname} to be available for guestcontrol...\n"
+        print "Waiting for #{vboxname} to be available for guestcontrol...\n" if @verbose
         out = `VBoxManage showvminfo "#{vboxname}" | grep 'Additions run level:'`
         run_level = out[-2..-2].to_i
         if run_level < 3
