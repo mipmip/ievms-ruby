@@ -4,15 +4,14 @@
 [![Code Climate](https://codeclimate.com/github/mipmip/ievms-ruby/badges/gpa.svg)](https://codeclimate.com/github/mipmip/ievms-ruby)
 [![Dependency Status](https://gemnasium.com/mipmip/ievms-ruby.svg)](https://gemnasium.com/mipmip/ievms-ruby)
 
-
 Ruby interface for boxes made by ievms.sh. Use this Library to provision your
 IE boxes from https://modern.ie.
 
-Next ievms.sh ievms-ruby also works great in combination with iectrl.
+Next to [ievms.sh](https://github.com/xdissent/ievms), `ievms-ruby` also works great in combination with [iectrl](https://github.com/xdissent/iectrl).
 
 ## Requirements
 
-* VirtualBox >= 5.0.4
+* [VirtualBox](https://www.virtualbox.org/wiki/Downloads) >= 5.0.4
 * VirtualBox Extension Pack and Guest Additions >= 5.0.4
 * Host Machine: OSX or Linux (only tested on OSX 10.9 & 10.10)
 * Virtual Machines created by .ievms (only tested with vanilla Win7 machines)
