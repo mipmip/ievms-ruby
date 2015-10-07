@@ -94,8 +94,10 @@ provision.install_ruby_and_git
 ## TODO 0.1.x first loud release
 
 * Upload files as admin to guest machine
-* Test More Win platforms
+* Test Windows XP
+* Test Windows 10
 * Execution time out for exec
+* Test on Linux guest
 * Rubocop refactoring
 
 ## Testing
@@ -114,6 +116,18 @@ bundle install
 rake
 ```
 
+## Reason why
+I wrote this because...
+
+- I do not like Windows a lot so I rather control it from the outside
+- We're using [Watir](http://watir.com) to test sites in IE browsers
+- We're using GitLab CI to control our Win boxes
+- I don't like to repeat myself
+
+## Acknowledgements
+- ievms - Provider of a platform and methology
+- modern.IE - Provider of IE VM images.
+- virtualbox - Software for running Virtual Machines
 
 ## Contributing
 
