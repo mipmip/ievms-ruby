@@ -81,15 +81,6 @@ module Ievms
     end
 
     # execute existibg batch file in Windows guest as Administrator
-    def run_bat_as_admin(guest_path, quiet=false)
-      print "Executing batch file as administrator: #{guest_path}\n" unless quiet
-
-      guestcontrol_exec "cmd.exe", "cmd.exe /c \"echo #{guest_path} > C:\\Users\\IEUser\\ievms.bat\""
-      guestcontrol_exec "schtasks.exe", "schtasks.exe /run /tn ievms"
-
-    end
-
-    # execute existibg batch file in Windows guest as Administrator
     def run_command_as_admin(command,quiet=false)
       print "Executing command as administrator: #{command}\n" unless quiet
 
@@ -110,13 +101,6 @@ module Ievms
     def run_command(command, quiet=false)
       print "Executing command: #{command}\n" unless quiet
       out, _, _ = guestcontrol_exec "cmd.exe", "cmd.exe /c \"#{command}\""
-      out
-    end
-
-    # execute existibg batch file in Windows guest
-    def run_bat(guest_path, quiet=false)
-      print "Executing batch file: #{guest_path}\n" unless quiet
-      out, _, _ = guestcontrol_exec "cmd.exe", "cmd.exe /c \"#{guest_path}\""
       out
     end
 
