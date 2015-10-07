@@ -25,6 +25,28 @@ class TestWin7 < Minitest::Test
 
   end
 
+  def test_long_admin_cmd
+    @machine.run_command_as_admin 'ping 127.0.0.1 -n 6 > nul'
+  end
+
+  def test_upload_string_as_file
+    @machine.run_command 'if exist C:\Users\IEUser\testfile.txt del C:\Users\IEUser\testfile.txt && Exit'
+
+    content = <<eos
+String is uploaded with ievms-ruby
+
+ohhh yeah....
+eos
+    @machine.upload_string_as_file_to_guest(content, 'C:\Users\IEUser\testfile.txt')
+    assert_equal true, @machine.download_string_from_file_to_guest('C:\Users\IEUser\testfile.txt').include?('ohhh yeah')
+  end
+
+  def test_download_file_from_guest
+    FileUtils.rm '/tmp/testdlfile.txt' if File.exists? '/tmp/testdlfile.txt'
+    @machine.download_file_from_guest('C:\ievms.xml', '/tmp/testdlfile.txt')
+    assert_equal true, File.exists?('/tmp/testdlfile.txt')
+  end
+
   def test_execute_batch_file
 
     @machine.run_command 'if exist C:\Users\IEUser\test.bat del C:\Users\IEUser\test.bat && Exit'
