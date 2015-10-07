@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Pim Snel"]
   spec.email         = ["pim@lingewoud.nl"]
   spec.summary       = %q{Ruby interface for boxes made by ievms.sh}
-  spec.description   = %q{Ruby interface for boxes made by ievms.sh (http://xdissent.github.com/ievms)TODO: Write a short summary. Required.}
+  spec.description   = %q{Ruby interface for boxes made by ievms.sh (http://xdissent.github.com/ievms)}
   spec.homepage      = "https://github.com/mipmip/ievms-ruby"
   spec.license       = "MIT"
 
