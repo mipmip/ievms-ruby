@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+require 'ievms/windows_guest'
+require 'thor'
+#require 'pp'
+
+
+class IevmsRb < Thor
+
+  desc "cat [vbox name] [filename]", "cat Guest Window file"
+  def cat(vbox_name,guest_path)
+
+    init vbox_name
+    p guest_path
+
+
+  end
+
+  private
+
+  def init vbox_name
+    @machine = Ievms::WindowsGuest.new vbox_name
+  end
+
+
+
+end
