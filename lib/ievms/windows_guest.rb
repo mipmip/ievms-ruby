@@ -1,7 +1,19 @@
 require "ievms/version"
+require 'open3'
+require 'fileutils'
+
+# VM admin username
+USERNAME='IEUser'
+# VM admin user password
+PASSWD='Passw0rd!'
+
+# IEVMS directory
+IEVMS_HOME = ENV['HOME']+'/.ievms'
+
 
 module Ievms
   class WindowsGuest
+
     def initialize(vbox_name)
       @vbox_name = vbox_name
 
@@ -28,6 +40,7 @@ module Ievms
       FileUtils.rm File.join(IEVMS_HOME,File.basename(local_path))
     end
 
+    # execute existibg batch file in Windows guest as Administrator
     def run_bat_as_admin(guest_path)
       print "Executing as administrator #{guest_path}\n"
 
@@ -36,6 +49,7 @@ module Ievms
 
     end
 
+    # execute existibg batch file in Windows guest
     def run_bat guest_path
       print "Executing #{guest_path}\n"
       guestcontrol_exec "cmd.exe", "cmd.exe /c \"#{guest_path}\""
