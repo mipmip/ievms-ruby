@@ -1,33 +1,30 @@
 # ievms-ruby
 
-Ruby interface for boxes made by ievms.sh
-(http://xdissent.github.com/ievms). Use this Library to provision your
+[![Gem Version](https://badge.fury.io/rb/ievms-ruby.svg)](https://badge.fury.io/rb/ievms-ruby)
+[![Code Climate](https://codeclimate.com/github/mipmip/ievms-ruby/badges/gpa.svg)](https://codeclimate.com/github/mipmip/ievms-ruby)
+[![Dependency Status](https://gemnasium.com/mipmip/ievms-ruby.svg)](https://gemnasium.com/mipmip/ievms-ruby)
+
+
+Ruby interface for boxes made by ievms.sh. Use this Library to provision your
 IE boxes from https://modern.ie.
+
+Next ievms.sh ievms-ruby also works great in combination with iectrl.
 
 ## Requirements
 
 * VirtualBox >= 5.0.4
 * VirtualBox Extension Pack and Guest Additions >= 5.0.4
 * Host Machine: OSX or Linux (only tested on OSX 10.9 & 10.10)
-* Virtual Machines created by .ievms (only tested with a vanilla "IE9 -
-  Win7" machine
+* Virtual Machines created by .ievms (only tested with vanilla Win7 machines)
 
-## Working
+## Features
 
 * Works with Windows 7
 * Upload files to guest machine
+* Download file from guest machine
 * Execute batch file on guest machine
 * Execute batch file as admin on guest machine
-
-## TODO 0.1
-
-* upload files as admin to guest machine
-* more IE platforms
-* more Win platforms
-* Use as CLI
-* Documentation
-* provisioning example
-* Rubycop
+* Cat file guest machine from cli
 
 ## Installation
 
@@ -43,11 +40,81 @@ Or install it yourself as:
     $ gem install ievms-ruby
 
 ## Usage
-Here's an example provising script using the Gem:
+
+### From CLI
+After gem install you can call:
+
+```bash
+ievmsrb help
+```
+
+to cat a guest file:
+
+```bash
+ievmsrb cat "IE9 - Win7" 'C:\Windows\System32\Drivers\Etc\hosts'
+```
+
+### As library
+Ievms-ruby very usable as provision tool for windows. E.g. for CI. Here's an example
+provisioning script using the Gem:
+
+```ruby
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'bundler/setup'
+require 'ievms/windows_guest'
+
+class ProvisionIE
+
+  # Create interface for the 'IE9 - Win7' virtual box
+  def init
+    @machine = Ievms::WindowsGuest.new 'IE9 - Win7'
+  end
+
+  # Install the choco package manager (APT for Windows)
+  def install_chocolatey
+    print "Installing Chocolatey\n"
+    choco_install_cmd = '@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString(\'https://chocolatey.org/install.ps1\'))" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin '
+    @machine.run_command_as_admin(choco_install_cmd)
+  end
+
+  # Install ruby and git stuff, the reason why we wrote ievms-ruby
+  def install_ruby_and_git
+    %w( ruby msysgit ).each do |pkg|
+      @machine.run_command_as_admin "c:\\ProgramData\\chocolatey\\bin\\choco install -y #{pkg}"
+    end
+  end
+end
+
+provision = ProvisionIE.new
+provision.init
+provision.install_chocolatey
+provision.install_ruby_and_git
+```
+
+## TODO 0.1.x first loud release
+
+* Upload files as admin to guest machine
+* Test More Win platforms
+* Execution time out for exec
+* Rubocop refactoring
+
+## Testing
+
+To run the tests you need top fullfil the testing requirements first:
+
+* VirtualBox >= 5.0.4
+* "IE9 - Win7" installed by ievms.sh 
+* Create an new virtual machine called `standbymachine`. Keep the disk size as
+  small as possible. It should be turned off.
 
 ```
-TODO
+git clone https://github.com/mipmip/ievms-ruby.git
+cd ievms-ruby
+bundle install
+rake
 ```
+
 
 ## Contributing
 
