@@ -99,6 +99,14 @@ provision.install_ruby_and_git
 * Execution time out for exec
 * Test on Linux guest
 * Rubocop refactoring
+* CodeClimate Coverage setup
+* Duplicate code removal
+
+## BackLog
+
+* Ansible Example
+* Gitlab CI Example
+* Jenkins Example
 
 ## Testing
 
