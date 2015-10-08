@@ -24,22 +24,11 @@ module Ievms
       is_vm vbox_name
     end
 
-    # Copy a file to the virtual machine from the ievms home folder.
-    def copy_to_vm(src ,dest, quiet=false)
-      print "Copying #{src} to #{dest}\n" unless quiet
-      guestcontrol_exec "cmd.exe", "cmd.exe /c copy \"E:\\#{src}\" \"#{dest}\""
-    end
-
-    # Copy a file to the virtual machine from the ievms home folder.
-    def copy_from_vm(src ,dest, quiet=false)
-      print "Copying #{src} to #{dest}\n" unless quiet
-      guestcontrol_exec "cmd.exe", "cmd.exe /c copy \"#{src}\" \"E:\\#{dest}\""
-    end
-
     def download_file_from_guest(guest_path, local_path, quiet=false)
 
+      print "Copying #{guest_path} to #{local_path}\n" unless quiet
       # 1 run cp command in machine
-      copy_from_vm guest_path, File.basename(local_path), quiet
+      guestcontrol_exec "cmd.exe", "cmd.exe /c copy \"#{guest_path}\" \"E:\\#{File.basename(local_path)}\""
 
       # 2 copy to tmp location in .ievms
       FileUtils.cp File.join(IEVMS_HOME,File.basename(local_path)), local_path
@@ -55,14 +44,17 @@ module Ievms
       FileUtils.cp local_path, File.join(IEVMS_HOME,File.basename(local_path))
 
       # 2 run cp command in machine
-      copy_to_vm File.basename(local_path), guest_path, quiet
+      print "Copying #{local_path} to #{guest_path}\n" unless quiet
+      guestcontrol_exec "cmd.exe", "cmd.exe /c copy \"E:\\#{File.basename(local_path)}\" \"#{guest_path}\""
 
       # 3 remove tmp file in .ievms
       FileUtils.rm File.join(IEVMS_HOME,File.basename(local_path))
     end
 
     def download_string_from_file_to_guest( guest_path, quiet=false)
-      copy_from_vm guest_path, 'tmpfile.txt', quiet
+      print "Copying #{guest_path} to tempfile.txt\n" unless quiet
+      guestcontrol_exec "cmd.exe", "cmd.exe /c copy \"#{guest_path}\" \"E:\\tmpfile.txt\""
+
       string = IO.read(File.join(IEVMS_HOME,'tmpfile.txt'))
       FileUtils.rm File.join(IEVMS_HOME,'tmpfile.txt')
       string
