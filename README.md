@@ -4,6 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/mipmip/ievms-ruby/badges/gpa.svg)](https://codeclimate.com/github/mipmip/ievms-ruby)
 [![Test Coverage](https://codeclimate.com/github/mipmip/ievms-ruby/badges/coverage.svg)](https://codeclimate.com/github/mipmip/ievms-ruby/coverage)
 [![Dependency Status](https://gemnasium.com/mipmip/ievms-ruby.svg)](https://gemnasium.com/mipmip/ievms-ruby)
+[![Inline docs](http://inch-ci.org/github/mipmip/ievms-ruby.svg?branch=master)](http://inch-ci.org/github/mipmip/ievms-ruby)
 
 Ruby interface for boxes made by ievms.sh. Use this Library to provision your
 IE boxes from https://modern.ie.
