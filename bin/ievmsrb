@@ -13,6 +13,14 @@ class IevmsRb < Thor
     print "\n"
   end
 
+  desc "cmd [vbox name] [command to execute]", "Run command in cmd.exe"
+  def cmd(vbox_name,command)
+    init vbox_name
+
+    print @machine.run_command command
+    print "\n"
+  end
+
   private
 
   def init vbox_name
