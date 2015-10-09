@@ -5,15 +5,23 @@
 [![Test Coverage](https://codeclimate.com/github/mipmip/ievms-ruby/badges/coverage.svg)](https://codeclimate.com/github/mipmip/ievms-ruby/coverage)
 [![Dependency Status](https://gemnasium.com/mipmip/ievms-ruby.svg)](https://gemnasium.com/mipmip/ievms-ruby)
 
+
 Ruby interface for boxes made by ievms.sh. Use this Library to provision your
 IE boxes from https://modern.ie.
 
 Next to [ievms.sh](https://github.com/xdissent/ievms), `ievms-ruby` also works great in combination with [iectrl](https://github.com/xdissent/iectrl).
 
+## WinBoxes supported
+
+![winxp](https://img.shields.io/badge/WinXP-failure-red.svg)
+![win7](https://img.shields.io/badge/Win7-success-brightgreen.svg)
+![win8](https://img.shields.io/badge/Win8-success-brightgreen.svg)
+![win10](https://img.shields.io/badge/Win10-unknown-lightgrey.svg)
+
 ## Requirements
 
-* [VirtualBox](https://www.virtualbox.org/wiki/Downloads) >= 5.0.4
-* VirtualBox Extension Pack and Guest Additions >= 5.0.4
+* [VirtualBox](https://www.virtualbox.org/wiki/Downloads) >= 5.0.6
+* VirtualBox Extension Pack and Guest Additions >= 5.0.6
 * Host Machine: OSX or Linux (only tested on OSX 10.9 & 10.10)
 * Virtual Machines created by .ievms (only tested with vanilla Win7 machines)
 
@@ -95,26 +103,26 @@ provision.install_ruby_and_git
 ## TODO 0.1.x first loud release
 
 * Upload files as admin to guest machine
-* Test Windows XP
 * Test Windows 10
-* Execution time out for exec
+* Execution time out for exec, as option
 * Test on Linux guest
-* Rubocop refactoring
-* CodeClimate Coverage setup
-* Duplicate code removal
+* Gitlab CI Example
 
 ## BackLog
 
 * Ansible Example
-* Gitlab CI Example
 * Jenkins Example
 
-## Testing
+## Contributing
+
+Merge requests are welcome. Specially for XP support. Please submit a new ticket if you want to report an issue.
+
+### Testing
 
 To run the tests you need top fullfil the testing requirements first:
 
 * VirtualBox >= 5.0.4
-* "IE9 - Win7" installed by ievms.sh 
+* "IE9 - Win7" installed by ievms.sh
 * Create an new virtual machine called `standbymachine`. Keep the disk size as
   small as possible. It should be turned off.
 
@@ -125,23 +133,23 @@ bundle install
 rake
 ```
 
-## Reason why
-I wrote this because...
-
-- I do not like Windows a lot so I rather control it from the outside
-- We're using [Watir](http://watir.com) to test sites in IE browsers
-- We're using GitLab CI to control our Win boxes
-- I don't like to repeat myself
-
-## Acknowledgements
-- ievms - Provider of a platform and methology
-- modern.IE - Provider of IE VM images.
-- virtualbox - Software for running Virtual Machines
-
-## Contributing
+### Merge Requests
 
 1. Fork it ( https://github.com/mipmip/ievms-ruby/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+## Troubleshooting
+
+- If tests fail check if virtualbox guest additions 5.0.6 or higher are
+  installed
+
+## Acknowledgements
+- ievms - Provider of a platform and methology
+- modern.IE - Provider of IE VM images.
+- virtualbox - Software for running Virtual Machines
+- shields.io - Creates the beautiful Windows Badges
+
+
