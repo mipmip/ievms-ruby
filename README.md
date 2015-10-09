@@ -5,7 +5,6 @@
 [![Test Coverage](https://codeclimate.com/github/mipmip/ievms-ruby/badges/coverage.svg)](https://codeclimate.com/github/mipmip/ievms-ruby/coverage)
 [![Dependency Status](https://gemnasium.com/mipmip/ievms-ruby.svg)](https://gemnasium.com/mipmip/ievms-ruby)
 
-
 Ruby interface for boxes made by ievms.sh. Use this Library to provision your
 IE boxes from https://modern.ie.
 
@@ -18,21 +17,20 @@ Next to [ievms.sh](https://github.com/xdissent/ievms), `ievms-ruby` also works g
 ![win8](https://img.shields.io/badge/Win8-success-brightgreen.svg)
 ![win10](https://img.shields.io/badge/Win10-unknown-lightgrey.svg)
 
+## Features
+
+* Upload files to guest machine
+* Download file from guest machine
+* Execute cmd.exe and powershell commands on guest machine
+* Execute cmd.exe and powershell commands on guest machine as admin
+* Cat file guest machine from cli
+
 ## Requirements
 
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads) >= 5.0.6
 * VirtualBox Extension Pack and Guest Additions >= 5.0.6
 * Host Machine: OSX or Linux (only tested on OSX 10.9 & 10.10)
 * Virtual Machines created by .ievms (only tested with vanilla Win7 machines)
-
-## Features
-
-* Works with Windows 7
-* Upload files to guest machine
-* Download file from guest machine
-* Execute batch file on guest machine
-* Execute batch file as admin on guest machine
-* Cat file guest machine from cli
 
 ## Installation
 
@@ -48,19 +46,6 @@ Or install it yourself as:
     $ gem install ievms-ruby
 
 ## Usage
-
-### From CLI
-After gem install you can call:
-
-```bash
-ievmsrb help
-```
-
-to cat a guest file:
-
-```bash
-ievmsrb cat "IE9 - Win7" 'C:\Windows\System32\Drivers\Etc\hosts'
-```
 
 ### As library
 Ievms-ruby very usable as provision tool for windows. E.g. for CI. Here's an example
@@ -100,25 +85,24 @@ provision.install_chocolatey
 provision.install_ruby_and_git
 ```
 
-## TODO 0.1.x first loud release
+### From CLI
+After gem install you can call:
 
-* Upload files as admin to guest machine
-* Test Windows 10
-* Execution time out for exec, as option
-* Test on Linux guest
-* Gitlab CI Example
+```bash
+ievmsrb help
+```
 
-## BackLog
+to cat a guest file:
 
-* Ansible Example
-* Jenkins Example
+```bash
+ievmsrb cat "IE9 - Win7" 'C:\Windows\System32\Drivers\Etc\hosts'
+```
 
 ## Contributing
-
-Merge requests are welcome. Specially for XP support. Please submit a new ticket if you want to report an issue.
+Please submit a new ticket if you want to report an issue.
+Merge requests are welcome. See issues with `Help  Wanted` label.
 
 ### Testing
-
 To run the tests you need top fullfil the testing requirements first:
 
 * VirtualBox >= 5.0.4
@@ -130,11 +114,10 @@ To run the tests you need top fullfil the testing requirements first:
 git clone https://github.com/mipmip/ievms-ruby.git
 cd ievms-ruby
 bundle install
-rake
+bundle exec rake
 ```
 
 ### Merge Requests
-
 1. Fork it ( https://github.com/mipmip/ievms-ruby/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
@@ -142,7 +125,6 @@ rake
 5. Create a new Pull Request
 
 ## Troubleshooting
-
 - If tests fail check if virtualbox guest additions 5.0.6 or higher are
   installed
 
