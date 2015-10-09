@@ -32,24 +32,19 @@ Next to [ievms.sh](https://github.com/xdissent/ievms), `ievms-ruby` also works g
 * Host Machine: OSX or Linux (only tested on OSX 10.9 & 10.10)
 * Virtual Machines created by .ievms (only tested with vanilla Win7 machines)
 
-## Installation
+## Usage
+
+### As library
+Use Ievms-ruby in provisioning scripts for windows E.g. for CI. Here's an example
+provisioning script using the Gem. It installs [Chocolatey](https://chocolatey.org), Ruby, and [git-for-windows](https://git-for-windows.github.io) without user interaction needed.
 
 Add this line to your application's Gemfile:
 
 ```ruby
 gem 'ievms-ruby'
 ```
-    $ bundle
 
-Or install it yourself as:
-
-    $ gem install ievms-ruby
-
-## Usage
-
-### As library
-Ievms-ruby very usable as provision tool for windows. E.g. for CI. Here's an example
-provisioning script using the Gem:
+run `bundle install`
 
 ```ruby
 #!/usr/bin/env ruby
@@ -86,6 +81,10 @@ provision.install_ruby_and_git
 ```
 
 ### From CLI
+Install it yourself as:
+
+    $ gem install ievms-ruby
+
 After gem install you can call:
 
 ```bash
