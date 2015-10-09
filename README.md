@@ -13,6 +13,7 @@ Next to [ievms.sh](https://github.com/xdissent/ievms), `ievms-ruby` also works g
 ## WinBoxes supported
 
 ![winxp](https://img.shields.io/badge/WinXP-failure-red.svg)
+![winvista](https://img.shields.io/badge/WinVista-unknown-lightgrey.svg)
 ![win7](https://img.shields.io/badge/Win7-success-brightgreen.svg)
 ![win8](https://img.shields.io/badge/Win8-success-brightgreen.svg)
 ![win10](https://img.shields.io/badge/Win10-unknown-lightgrey.svg)
@@ -91,10 +92,12 @@ After gem install you can call:
 ievmsrb help
 ```
 
-to cat a guest file:
-
 ```bash
+# display the contents of a guest file
 ievmsrb cat "IE9 - Win7" 'C:\Windows\System32\Drivers\Etc\hosts'
+
+# execute a cmd on the guestmachine and show the output
+./bin/ievmsrb cmd "IE9 - Win7" 'tasklist'
 ```
 
 ## Contributing
