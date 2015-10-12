@@ -95,39 +95,20 @@ After installation you can use the `ievmsrb` cli program.
 $ ievmsrb help
 
 Commands:
-  ievmsrb cat [vbox name] [file path]                        # cat file from path in Win vbox
-  ievmsrb cmd [vbox name] [command to execute]               # Run command with cmd.exe in Win vbox
-  ievmsrb copy_from [vbox name] [path in vbox] [local file]  # Copy file from Win vbox to local path
-  ievmsrb copy_to [vbox name] [local file] [path in vbox]    # Copy local file to Win vbox
-  ievmsrb help [COMMAND]                                     # Describe available commands or one specific command
-  ievmsrb ps [vbox name]                                     # Show running tasks in Win vbox
-  ievmsrb reboot [vbox name]                                 # Reboot Win box
-  ievmsrb shutdown [vbox name]                               # Shutdown Win vbox
+  ievmsrb cat [vbox name] [file path]                             # cat file from path in Win vbox
+  ievmsrb cmd [vbox name] [command to execute]                    # Run command with cmd.exe in Win vbox
+  ievmsrb cmd_adm [vbox name] [command to execute]                # Run command as Administrator with cmd.exe in Win vbox
+  ievmsrb copy_from [vbox name] [path in vbox] [local file]       # Copy file from Win vbox to local path
+  ievmsrb copy_to [vbox name] [local file] [path in vbox]         # Copy local file to Win vbox
+  ievmsrb copy_to_as_adm [vbox name] [local file] [path in vbox]  # Copy local file to Win vbox as Administrator
+  ievmsrb help [COMMAND]                                          # Describe available commands or one specific command
+  ievmsrb ps [vbox name]                                          # Show running tasks in Win vbox
+  ievmsrb reboot [vbox name]                                      # Reboot Win box
+  ievmsrb shutdown [vbox name]                                    # Shutdown Win vbox
 ```
 
-#### ievmsrb examples
+Read the docs for more info about ievms-ruby CLI usage.
 
-Display the contents of a guest file.
-```bash
-$ ievmsrb cat "IE9 - Win7" 'C:\Windows\System32\Drivers\Etc\hosts'
-```
-
-
-Execute a cmd on the guestmachine and show the output
-```bash
-$ ievmsrb cmd "IE9 - Win7" 'tasklist'
-```
-
-
-Copy a file from the Windows Guest to a local path
-```bash
-$ ievmsrb copy_from "IE9 - Win7" 'C:\Windows\System32\Drivers\Etc\hosts' ~/Desktop/hosts.win9
-```
-
-Turn of the Filewall executing a command as Administator
-```bash
-$ ievmsrb cmd_adm "IE9 - Win7" 'NetSh Advfirewall set allprofiles state off'
-```
 
 ## Contributing
 Please submit a new ticket if you want to report an issue.
