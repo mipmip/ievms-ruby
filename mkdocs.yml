@@ -1,0 +1,20 @@
+site_name: 'Ievms-ruby'
+pages:
+- [index.md, Home]
+- [cli.md, CLI]
+#theme: readthedocs
+#theme: cerulean
+#theme: bootstrap
+#theme: amelia
+#theme: bootstrap
+theme: cosmo
+#theme: cyborg
+#theme: flatly
+#theme: journal
+#theme: mkdocs
+#theme: readable
+#theme: simplex
+#theme: slate
+#theme: spacelab
+#theme: united
+#theme: yeti
