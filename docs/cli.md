@@ -1,11 +1,36 @@
-# Ievms-ruby CLI
+# CLI util ievmsrb
 
-Then gem ievms-ruby comes with a CLI program calles ievmsrb. This
+The gem ievms-ruby comes with a CLI program calles ievmsrb. This
 utility makes controlling virtual windows machines more easily is they
 are setup with ievms.
 
+## Installing ievmsrb
+Install the Gem on your system:
 
-## ievmsrb examples
+    $ gem install ievms-ruby
+
+After installation you can use the `ievmsrb` cli program.
+
+## Usage
+Here's the output of `ievmsrb help`
+
+```bash
+$ ievmsrb help
+
+Commands:
+  ievmsrb cat [vbox name] [file path]                             # cat file from path in Win vbox
+  ievmsrb cmd [vbox name] [command to execute]                    # Run command with cmd.exe in Win vbox
+  ievmsrb cmd_adm [vbox name] [command to execute]                # Run command as Administrator with cmd.exe in Win vbox
+  ievmsrb copy_from [vbox name] [path in vbox] [local file]       # Copy file from Win vbox to local path
+  ievmsrb copy_to [vbox name] [local file] [path in vbox]         # Copy local file to Win vbox
+  ievmsrb copy_to_as_adm [vbox name] [local file] [path in vbox]  # Copy local file to Win vbox as Administrator
+  ievmsrb help [COMMAND]                                          # Describe available commands or one specific command
+  ievmsrb ps [vbox name]                                          # Show running tasks in Win vbox
+  ievmsrb reboot [vbox name]                                      # Reboot Win box
+  ievmsrb shutdown [vbox name]                                    # Shutdown Win vbox
+```
+
+## Some ievmsrb examples
 
 Display the contents of a guest file.
 ```bash

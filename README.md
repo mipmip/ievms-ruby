@@ -21,66 +21,29 @@ Next to [ievms.sh](https://github.com/xdissent/ievms), `ievms-ruby` also works g
 
 ## Features
 
-* Upload files to guest machine
-* Download file from guest machine
+* Upload and download files from guest machine
 * Execute cmd.exe and powershell commands on guest machine
 * Execute cmd.exe and powershell commands on guest machine as admin
-* Cat file guest machine from cli
+* Shortcut commands for Windows guest like `cat`, `ps`, `reboot` and `shutdown`
+* To be used as CLI utility or as library in a ruby script.
 
 ## Requirements
 
+* Host Machine: OSX or Linux (only tested on OSX 10.9 & 10.10)
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads) >= 5.0.6
 * VirtualBox Extension Pack and Guest Additions >= 5.0.6
-* Host Machine: OSX or Linux (only tested on OSX 10.9 & 10.10)
-* Virtual Machines created by .ievms (only tested with vanilla Win7 machines)
+* Windows Machines created by [ievms](https://github.com/xdissent/ievms)
+
+### Recommended
+* [iectrl](https://github.com/xdissent/iectrl), cli interface for simple
+ ievms admin commands
 
 ## Usage
 
 ### As library
-Use Ievms-ruby in provisioning scripts for windows E.g. for CI. Here's an example
-provisioning script using the Gem. It installs [Chocolatey](https://chocolatey.org), Ruby, and [git-for-windows](https://git-for-windows.github.io) without user interaction needed.
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'ievms-ruby'
-```
-
-run `bundle install`
-
-```ruby
-#!/usr/bin/env ruby
-require 'rubygems'
-require 'bundler/setup'
-require 'ievms/windows_guest'
-
-class ProvisionIE
-
-  # Create interface for the 'IE9 - Win7' virtual box
-  def init
-    @machine = Ievms::WindowsGuest.new 'IE9 - Win7'
-  end
-
-  # Install the choco package manager (APT for Windows)
-  def install_chocolatey
-    print "Installing Chocolatey\n"
-    choco_install_cmd = '@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString(\'https://chocolatey.org/install.ps1\'))" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin '
-    @machine.run_command_as_admin(choco_install_cmd)
-  end
-
-  # Install ruby and git stuff, the reason why we wrote ievms-ruby
-  def install_ruby_and_git
-    %w( ruby msysgit ).each do |pkg|
-      @machine.run_command_as_admin "c:\\ProgramData\\chocolatey\\bin\\choco install -y #{pkg}"
-    end
-  end
-end
-
-provision = ProvisionIE.new
-provision.init
-provision.install_chocolatey
-provision.install_ruby_and_git
-```
+Use Ievms-ruby in provisioning scripts for windows E.g. for Gitlab CI
+or Jenkins integration. There are provisioning example's located in the
+[ievms-ruby library documentation](http://mipmip.github.io/ievms-ruby/library/).
 
 ### From CLI
 Install the Gem on your system:
@@ -89,7 +52,7 @@ Install the Gem on your system:
 
 After installation you can use the `ievmsrb` cli program.
 
-#### ievmsrb commands
+Here's the output of `ievmsrb help`
 
 ```bash
 $ ievmsrb help
@@ -107,8 +70,7 @@ Commands:
   ievmsrb shutdown [vbox name]                                    # Shutdown Win vbox
 ```
 
-Read the docs for more info about ievms-ruby CLI usage.
-
+Read the docs for more info about [ievms-ruby CLI usage](http://mipmip.github.io/ievms-ruby/cli/).
 
 ## Contributing
 Please submit a new ticket if you want to report an issue.
@@ -121,6 +83,7 @@ To run the tests you need top fullfil the testing requirements first:
 * "IE9 - Win7" installed by ievms.sh
 * Create an new virtual machine called `standbymachine`. Keep the disk size as
   small as possible. It should be turned off.
+* [iectrl](https://github.com/xdissent/iectrl), cli interface for simple
 
 ```
 git clone https://github.com/mipmip/ievms-ruby.git
@@ -145,5 +108,3 @@ bundle exec rake
 - modern.IE - Provider of IE VM images.
 - virtualbox - Software for running Virtual Machines
 - shields.io - Creates the beautiful Windows Badges
-
-

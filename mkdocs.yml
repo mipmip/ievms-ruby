@@ -1,13 +1,14 @@
 site_name: 'Ievms-ruby'
 pages:
 - [index.md, Home]
-- [cli.md, CLI]
-#theme: readthedocs
+- [cli.md, ievmsrb (CLI)]
+- [library.md, Ievms-ruby library]
+- [provisioning_examples.md, Provisioning Examples]
+theme: readthedocs
 #theme: cerulean
-#theme: bootstrap
 #theme: amelia
 #theme: bootstrap
-theme: cosmo
+#theme: cosmo
 #theme: cyborg
 #theme: flatly
 #theme: journal
