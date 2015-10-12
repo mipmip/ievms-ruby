@@ -14,7 +14,7 @@ Next to [ievms.sh](https://github.com/xdissent/ievms), `ievms-ruby` also works g
 ## WinBoxes supported
 
 ![winxp](https://img.shields.io/badge/WinXP-failure-red.svg)
-![winvista](https://img.shields.io/badge/WinVista-unknown-lightgrey.svg)
+![winvista](https://img.shields.io/badge/WinVista-failure-red.svg)
 ![win7](https://img.shields.io/badge/Win7-success-brightgreen.svg)
 ![win8](https://img.shields.io/badge/Win8-success-brightgreen.svg)
 ![win10](https://img.shields.io/badge/Win10-unknown-lightgrey.svg)
