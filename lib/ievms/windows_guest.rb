@@ -26,7 +26,7 @@ module Ievms
 
     def download_file_from_guest(guest_path, local_path, quiet=false)
 
-      print "Copying #{guest_path} to #{local_path}\n" unless quiet
+      log_stdout "Copying #{guest_path} to #{local_path}", quiet
       # 1 run cp command in machine
       guestcontrol_exec "cmd.exe", "cmd.exe /c copy \"#{guest_path}\" \"E:\\#{File.basename(local_path)}\""
 
@@ -44,7 +44,7 @@ module Ievms
       FileUtils.cp local_path, File.join(IEVMS_HOME,File.basename(local_path))
 
       # 2 run cp command in machine
-      print "Copying #{local_path} to #{guest_path}\n" unless quiet
+      log_stdout "Copying #{local_path} to #{guest_path}", quiet
       guestcontrol_exec "cmd.exe", "cmd.exe /c copy \"E:\\#{File.basename(local_path)}\" \"#{guest_path}\""
 
       # 3 remove tmp file in .ievms
@@ -52,7 +52,7 @@ module Ievms
     end
 
     def download_string_from_file_to_guest( guest_path, quiet=false)
-      print "Copying #{guest_path} to tempfile.txt\n" unless quiet
+      log_stdout "Copying #{guest_path} to tempfile.txt", quiet
       guestcontrol_exec "cmd.exe", "cmd.exe /c copy \"#{guest_path}\" \"E:\\tmpfile.txt\""
 
       string = IO.read(File.join(IEVMS_HOME,'tmpfile.txt'))
@@ -74,7 +74,7 @@ module Ievms
 
     # execute existibg batch file in Windows guest as Administrator
     def run_command_as_admin(command,quiet=false)
-      print "Executing command as administrator: #{command}\n" unless quiet
+      log_stdout "Executing command as administrator: #{command}", quiet
 
       run_command 'if exist C:\Users\IEUser\ievms.bat del C:\Users\IEUser\ievms.bat && Exit', true
 
@@ -91,7 +91,7 @@ module Ievms
 
     # execute existing batch file in Windows guest
     def run_command(command, quiet=false)
-      print "Executing command: #{command}\n" unless quiet
+      log_stdout "Executing command: #{command}", quiet
       out, _, _ = guestcontrol_exec "cmd.exe", "cmd.exe /c \"#{command}\""
       out
     end
@@ -102,6 +102,10 @@ module Ievms
     end
 
     private
+
+    def log_stdout(msg, quiet=true)
+      print "[#{@vbox_name}] #{msg}\n" unless quiet
+    end
 
     # execute final guest control shell cmd
     # returns [stdout,stderr,status] from capture3
