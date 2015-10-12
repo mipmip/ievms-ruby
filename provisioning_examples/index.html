@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Provisioning Examples - Ievms-ruby</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Ievms-ruby</a>
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+      <ul class="current">
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="..">Home</a>
+                
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../cli/">ievmsrb (CLI)</a>
+                
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 ">
+                <a class="" href="../library/">Ievms-ruby library</a>
+                
+            </li>
+        
+
+    
+        
+            <li class="toctree-l1 current">
+                <a class="current" href="./">Provisioning Examples</a>
+                
+                    <ul>
+                    
+                        <li class="toctree-l3"><a href="#provisioning-examples">Provisioning examples</a></li>
+                        
+                            <li><a class="toctree-l4" href="#auto-install-chocolatey-and-git-for-windows">Auto install Chocolatey and git-for-windows</a></li>
+                        
+                    
+                    </ul>
+                
+            </li>
+        
+
+    
+</ul>
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Ievms-ruby</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+    <li>Provisioning Examples</li>
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              <h1 id="provisioning-examples">Provisioning examples</h1>
+<p>Here you can find usable example provisioning scripts.</p>
+<h2 id="auto-install-chocolatey-and-git-for-windows">Auto install Chocolatey and git-for-windows</h2>
+<p>provisioning script using the Gem. It installs <a href="https://chocolatey.org">Chocolatey</a>, Ruby, and <a href="https://git-for-windows.github.io">git-for-windows</a> without user interaction needed.</p>
+<pre><code class="ruby">#!/usr/bin/env ruby
+require 'rubygems'
+require 'bundler/setup'
+require 'ievms/windows_guest'
+
+class ProvisionIE
+
+  # Create interface for the 'IE9 - Win7' virtual box
+  def init
+    @machine = Ievms::WindowsGuest.new 'IE9 - Win7'
+  end
+
+  # Install the choco package manager (APT for Windows)
+  def install_chocolatey
+    print &quot;Installing Chocolatey\n&quot;
+    choco_install_cmd = '@powershell -NoProfile -ExecutionPolicy unrestricted -Command &quot;iex ((new-object net.webclient).DownloadString(\'https://chocolatey.org/install.ps1\'))&quot; &amp;&amp; SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin '
+    @machine.run_command_as_admin(choco_install_cmd)
+  end
+
+  # Install ruby and git stuff, the reason why we wrote ievms-ruby
+  def install_ruby_and_git
+    %w( ruby msysgit ).each do |pkg|
+      @machine.run_command_as_admin &quot;c:\\ProgramData\\chocolatey\\bin\\choco &quot;\
+        &quot;install -y #{pkg}&quot;
+    end
+  end
+end
+
+provision = ProvisionIE.new
+provision.init
+provision.install_chocolatey
+provision.install_ruby_and_git
+</code></pre>
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../library/" class="btn btn-neutral" title="Ievms-ruby library"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+    <!-- Copyright etc -->
+    </p>
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+        
+      <span><a href="../library/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      <span style="margin-left: 15px"><a href="" style="color: #fcfcfc">Next &raquo;</a></span>
+    </span>
+</div>
+
+<!--
+MkDocs version  : 0.12.2
+Docs Build Date : 2015-10-12 16:27:32.548284
+-->
+</body>
+</html>
