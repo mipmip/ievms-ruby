@@ -4,6 +4,14 @@ require 'timeout'
 
 class TestWin7 < Minitest::Test
   def setup
+
+    iectrl = `iectrl status "IE9 - Win7"`
+    if not iectrl.include?('RUNNING')
+      iectrl = `iectrl start "IE9 - Win7"`
+      sleep 5
+      IevmsRb.start(['ps', "IE9 - Win7"])
+    end
+
     @machine = Ievms::WindowsGuest.new 'IE9 - Win7'
   end
 
