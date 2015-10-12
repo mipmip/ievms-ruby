@@ -29,10 +29,10 @@ class IevmsRb < Thor
     print @machine.run_command "shutdown.exe /r /f /t 0"
   end
 
-  desc "copy_to_adm [vbox name] [local file] [path in vbox]", "Copy local file to Win vbox as Administrator"
-  def copy_to(vbox_name,local_path, guest_path)
+  desc "copy_to_as_adm [vbox name] [local file] [path in vbox]", "Copy local file to Win vbox as Administrator"
+  def copy_to_as_adm(vbox_name,local_path, guest_path)
     init vbox_name
-    @machine.upload_file_to_guest(local_path, guest_path, false)
+    @machine.upload_file_to_guest_as_admin(local_path, guest_path, false)
   end
 
   desc "copy_to [vbox name] [local file] [path in vbox]", "Copy local file to Win vbox"
@@ -56,7 +56,7 @@ class IevmsRb < Thor
   end
 
   desc "cmd_adm [vbox name] [command to execute]", "Run command as Administrator with cmd.exe in Win vbox"
-  def cmd_adm(vbox_name,command)
+  def cmd_as_adm(vbox_name,command)
     init vbox_name
 
     print @machine.run_command_as_admin command

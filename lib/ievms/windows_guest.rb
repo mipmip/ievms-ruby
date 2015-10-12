@@ -77,7 +77,7 @@ module Ievms
 
       log_stdout "Copying #{local_path} to #{guest_path} as Administrator", quiet
 
-      upload_file_to_guest(local_path, 'C:\Users\IEUser\.tempadminfile', false)
+      upload_file_to_guest(local_path, 'C:\Users\IEUser\.tempadminfile',true)
       run_command_as_admin('copy C:\Users\IEUser\.tempadminfile '+ guest_path,true)
       run_command 'del C:\Users\IEUser\.tempadminfile', true
     end
