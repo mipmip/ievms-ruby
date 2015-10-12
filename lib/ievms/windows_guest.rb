@@ -92,11 +92,15 @@ module Ievms
 
       guestcontrol_exec "schtasks.exe", "schtasks.exe /run /tn ievms"
 
-      while schtasks_query_ievms.include? 'Running'
-        print "."
-        sleep 2
+      unless quiet
+        print "..."
+        while schtasks_query_ievms.include? 'Running'
+          print "."
+          sleep 2
+        end
+        print "\n"
       end
-      print "\n"
+
     end
 
     # execute existing batch file in Windows guest
