@@ -72,6 +72,16 @@ module Ievms
       FileUtils.rm path
     end
 
+    # Upload a local file to the windows guest as Administator
+    def upload_file_to_guest_as_admin(local_path, guest_path, quiet=false)
+
+      log_stdout "Copying #{local_path} to #{guest_path} as Administrator", quiet
+
+      upload_file_to_guest(local_path, 'C:\Users\IEUser\.tempadminfile', false)
+      run_command_as_admin('copy C:\Users\IEUser\.tempadminfile '+ guest_path,true)
+      run_command 'del C:\Users\IEUser\.tempadminfile', true
+    end
+
     # execute existibg batch file in Windows guest as Administrator
     def run_command_as_admin(command,quiet=false)
       log_stdout "Executing command as administrator: #{command}", quiet

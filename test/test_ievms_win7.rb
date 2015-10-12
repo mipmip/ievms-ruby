@@ -75,4 +75,17 @@ eos
 
     assert_equal true, output_file_exists.include?('EmptyFile2Exist')
   end
+
+  def test_upload_file_as_admin
+    @machine.run_command_as_admin 'if exist C:\ievms_test_upload.txt del C:\ievms_test_upload.txt && Exit'
+    FileUtils.rm '/tmp/ievms_test_upload.txt' if File.exists? '/tmp/ievms_test_upload.txt'
+
+    `echo "uploadasadmin_yes" > /tmp/ievms_test_upload.txt`
+
+    @machine.upload_file_to_guest_as_admin '/tmp/ievms_test_upload.txt', 'C:\ievms_test_upload.txt'
+    output_file_exists = @machine.run_command 'type c:\ievms_test_upload.txt'
+
+    assert_equal true, output_file_exists.include?('uploadasadmin_yes')
+  end
+
 end
