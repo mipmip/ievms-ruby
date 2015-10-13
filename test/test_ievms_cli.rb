@@ -5,13 +5,10 @@ require 'ievms/windows_guest'
 require 'timeout'
 
 class TestWin7 < Minitest::Test
+include IevmsRubyTestsShared
+
   def setup
-    iectrl = `iectrl status "IE9 - Win7"`
-    if not iectrl.include?('RUNNING')
-      iectrl = `iectrl start "IE9 - Win7"`
-      sleep 5
-      IevmsRb.start(['ps', "IE9 - Win7"])
-    end
+    ensure_machine_running("IE9 - Win7")
   end
 
   def test_non_existing_guest
