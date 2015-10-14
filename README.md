@@ -77,14 +77,27 @@ Please submit a new ticket if you want to report an issue.
 Merge requests are welcome. See issues with `Help  Wanted` label.
 
 ### Testing
-To run the tests you need top fullfil the testing requirements first:
+To run the tests you need to fullfil the testing requirements first:
 
-* VirtualBox >= 5.0.4
-* "IE9 - Win7" installed by ievms.sh
-* Create an new virtual machine called `standbymachine`. Keep the disk size as
-  small as possible. It should be turned off.
+* Install VirtualBox >= 5.0.4 at time of writing 5.0.6
+
+* "IE9 - Win7" installed by ievms.sh and make sure its running
+
 * [iectrl](https://github.com/xdissent/iectrl), cli interface for simple
 
+```bash
+$ npm install iectrl
+$ echo 'PATH="$HOME/node_modules/.bin:$PATH"' >> ~/.profile
+$ source ~/.Provider
+```
+
+* Create an new virtual machine called `standbymachine`. Keep the disk size as
+  small as possible. It should be turned off.
+
+```bash
+VBoxManage createvm --name standbymachine --register```
+
+* clone ievms-ruby
 ```
 git clone https://github.com/mipmip/ievms-ruby.git
 cd ievms-ruby
