@@ -95,7 +95,8 @@ $ source ~/.Provider
   small as possible. It should be turned off.
 
 ```bash
-VBoxManage createvm --name standbymachine --register```
+VBoxManage createvm --name standbymachine --register
+```
 
 * clone ievms-ruby
 ```

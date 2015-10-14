@@ -5,7 +5,8 @@ require 'ievms/windows_guest'
 require 'timeout'
 
 class TestWin7 < Minitest::Test
-include IevmsRubyTestsShared
+  include IevmsRubyTestsShared
+
 
   def setup
     ensure_machine_running("IE9 - Win7")
@@ -42,7 +43,6 @@ include IevmsRubyTestsShared
     out2 = run_capture ['cat',"IE9 - Win7", 'C:\Users\IEUser\ievms_test_upload3.txt']
     assert_equal "[IE9 - Win7] Copying /tmp/ievms_test_upload3.txt to C:\\Users\\IEUser\\ievms_test_upload3.txt\n", out
     assert_match(/uploadasadmin_yes/, out2)
-
   end
 
   def test_copy_to_as_adm
@@ -54,7 +54,6 @@ include IevmsRubyTestsShared
     out2 = run_capture ['cat',"IE9 - Win7", 'C:\ievms_test_upload2.txt']
     assert_equal "[IE9 - Win7] Copying /tmp/ievms_test_upload2.txt to C:\\ievms_test_upload2.txt as Administrator\n", out
     assert_match(/uploadasadmin_yes/, out2)
-
   end
 
   def test_reboot

@@ -15,6 +15,12 @@ CodeClimate::TestReporter.start
 
 module IevmsRubyTestsShared
 
+  def initialize(name = nil)
+    print "Running test case: #{name}\n"
+    @test_name = name
+    super(name) unless name.nil?
+  end
+
   def ensure_machine_running vbox_name
 
     iectrl = `iectrl status "#{vbox_name}"`
