@@ -2,6 +2,7 @@ require "ievms/version"
 require 'open3'
 require 'fileutils'
 require 'tempfile'
+require 'timeout'
 
 # VM admin username
 USERNAME = 'IEUser'
@@ -15,13 +16,24 @@ IEVMS_HOME = ENV['HOME']+'/.ievms'
 module Ievms
   class WindowsGuest
     attr_accessor :verbose
-
-    @verbose = false
+    attr_accessor :timeout_secs
 
     def initialize(vbox_name)
+
+      @verbose = false
+      @timeout_secs = 600 #default timeout for a single task 5 minutes
+
       @vbox_name = vbox_name
 
       is_vm vbox_name
+    end
+
+    def verbose
+      @verbose
+    end
+
+    def verbose=(value)
+      @verbose = value
     end
 
     def download_file_from_guest(guest_path, local_path, quiet=false)
@@ -90,16 +102,19 @@ module Ievms
 
       upload_string_as_file_to_guest(command, 'C:\Users\IEUser\ievms.bat', true)
 
-      guestcontrol_exec "schtasks.exe", "schtasks.exe /run /tn ievms"
+      _ = Timeout::timeout(@timeout_secs) {
 
-      unless quiet
-        print "..."
-        while schtasks_query_ievms.include? 'Running'
-          print "."
-          sleep 2
+        guestcontrol_exec "schtasks.exe", "schtasks.exe /run /tn ievms"
+
+        unless quiet
+          print "..."
+          while schtasks_query_ievms.include? 'Running'
+            print "."
+            sleep 1
+          end
+          print "\n"
         end
-        print "\n"
-      end
+      }
 
     end
 
@@ -124,10 +139,16 @@ module Ievms
     # execute final guest control shell cmd
     # returns [stdout,stderr,status] from capture3
     def guestcontrol_exec(image, cmd)
-      wait_for_guestcontrol(@vbox_name)
-      cmd = "VBoxManage guestcontrol \"#{@vbox_name}\" run --username \"#{USERNAME}\" --password '#{PASSWD}' --exe \"#{image}\" -- #{cmd}"
-    #  print cmd + "\n"
-      return Open3.capture3(cmd)
+
+      _ = Timeout::timeout(@timeout_secs) {
+        wait_for_guestcontrol(@vbox_name)
+        cmd = "VBoxManage guestcontrol \"#{@vbox_name}\" run --username \"#{USERNAME}\" --password '#{PASSWD}' --exe \"#{image}\" -- #{cmd}"
+
+        log_stdout cmd, false if @verbose
+
+        return Open3.capture3(cmd)
+      }
+
     end
 
     # function taken from ievms

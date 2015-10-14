@@ -11,7 +11,10 @@ include IevmsRubyTestsShared
     ensure_machine_running("IE9 - Win7")
   end
 
-  def test_non_existing_guest
+  def test_timeout_option
+    assert_raises {
+      run_capture(["cmd", "IE9 - Win7", "ping 127.0.0.1 -n 6 > nul", "--verbose", "--timeout", "3" ])
+    }
   end
 
   def test_ps

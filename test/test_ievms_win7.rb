@@ -29,8 +29,26 @@ include IevmsRubyTestsShared
 
   end
 
+  def test_long_cmd
+    @machine.run_command 'ping 127.0.0.1 -n 6 > nul'
+  end
+
   def test_long_admin_cmd
     @machine.run_command_as_admin 'ping 127.0.0.1 -n 6 > nul'
+  end
+
+  def test_long_cmd_timeout
+    @machine.timeout_secs = 3
+    assert_raises {
+      @machine.run_command 'ping 127.0.0.1 -n 6 > nul'
+    }
+  end
+
+  def test_long_admin_cmd_timeout
+    @machine.timeout_secs = 3
+    assert_raises {
+      @machine.run_command_as_admin 'ping 127.0.0.1 -n 6 > nul'
+    }
   end
 
   def test_upload_string_as_file
