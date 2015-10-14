@@ -1,4 +1,6 @@
 class IevmsRb < Thor
+  class_option :verbose, :desc => 'Be more verbose', :type => :boolean, :aliases => '-v'
+  class_option :timeout, :desc => 'Timeout in seconds', :type => :numeric
 
   desc "cat [vbox name] [file path]", "cat file from path in Win vbox"
   def cat(vbox_name,guest_path)
@@ -61,6 +63,9 @@ class IevmsRb < Thor
 
   def init vbox_name
     @machine = Ievms::WindowsGuest.new vbox_name
+    #@machine.methods.sort
+    @machine.verbose = true if options[:verbose]
+    @machine.timeout_secs = options[:timeout] if options[:timeout]
   end
 end
 
