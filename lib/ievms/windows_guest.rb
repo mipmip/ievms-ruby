@@ -28,14 +28,6 @@ module Ievms
       is_vm vbox_name
     end
 
-    def verbose
-      @verbose
-    end
-
-    def verbose=(value)
-      @verbose = value
-    end
-
     def download_file_from_guest(guest_path, local_path, quiet=false)
 
       log_stdout "Copying #{guest_path} to #{local_path}", quiet
