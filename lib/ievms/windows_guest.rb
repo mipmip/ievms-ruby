@@ -91,8 +91,10 @@ module Ievms
       log_stdout "Executing command as administrator: #{command}", quiet
 
       run_command 'if exist C:\Users\IEUser\ievms.bat del C:\Users\IEUser\ievms.bat && Exit', true
+      upload_string_as_file_to_guest('C:\Users\IEUser\ievms_cmd.bat > C:\Users\IEUser\ievms.txt', 'C:\Users\IEUser\ievms.bat', true)
 
-      upload_string_as_file_to_guest(command, 'C:\Users\IEUser\ievms.bat', true)
+      run_command 'if exist C:\Users\IEUser\ievms.bat del C:\Users\IEUser\ievms_cmd.bat && Exit', true
+      upload_string_as_file_to_guest(command, 'C:\Users\IEUser\ievms_cmd.bat', true)
 
       _ = Timeout::timeout(@timeout_secs) {
 
@@ -108,6 +110,10 @@ module Ievms
         end
       }
 
+      print download_string_from_file_to_guest 'c:\Users\IEUser\ievms.txt', true
+      #print "\n"
+#      run_command 'if exist C:\Users\IEUser\ievms.txt del C:\Users\IEUser\ievms.txt && Exit', true
+
     end
 
     # execute existing batch file in Windows guest
@@ -120,6 +126,14 @@ module Ievms
     def schtasks_query_ievms
       out, _, _ = guestcontrol_exec "schtasks.exe", "schtasks.exe /query /tn ievms"
       out
+    end
+
+    #def run_powershell_cmd(command, quiet=false)
+    #  run_command '@powershell -NoProfile -Command "' + command +'"', quiet
+    #end
+
+    def run_powershell_cmd_as_admin(command, quiet=false)
+      run_command_as_admin  '@powershell -NoProfile -ExecutionPolicy unrestricted -Command "' + command + '"', quiet
     end
 
     private

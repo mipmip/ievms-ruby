@@ -54,3 +54,9 @@ Turn of the Filewall executing a command as Administator
 $ ievmsrb cmd_adm "IE9 - Win7" 'NetSh Advfirewall set allprofiles state off'
 ```
 
+
+Show all current account information
+To display the user rights that have been assigned to the account you used to log on to a Windows system, use the whoami command line tool with the /priv switch:
+```
+ievmsrb cmd "IE9 - Win7" "Whoami /ALL"
+```

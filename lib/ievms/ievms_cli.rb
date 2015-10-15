@@ -59,6 +59,20 @@ class IevmsRb < Thor
     print @machine.run_command_as_admin command
   end
 
+#  desc "pwrsh [vbox name] [command to execute]", "Run command with PowerShell in Win vbox"
+#  def pwrsh(vbox_name,command)
+#    init vbox_name
+#
+#    print @machine.run_powershell_cmd command
+#  end
+
+  desc "pwrsh_ad_adm [vbox name] [command to execute]", "Run command as Administrator with PowerShell in Win vbox"
+  def pwrsh_as_adm(vbox_name,command)
+    init vbox_name
+
+    print @machine.run_powershell_cmd_as_admin command
+  end
+
   private
 
   def init vbox_name
