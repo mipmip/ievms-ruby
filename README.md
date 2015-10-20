@@ -6,10 +6,7 @@
 [![Dependency Status](https://gemnasium.com/mipmip/ievms-ruby.svg)](https://gemnasium.com/mipmip/ievms-ruby)
 [![Inline docs](http://inch-ci.org/github/mipmip/ievms-ruby.svg?branch=master)](http://inch-ci.org/github/mipmip/ievms-ruby)
 
-Ruby interface for boxes made by ievms.sh. Use this Library to provision your
-IE boxes from https://modern.ie.
-
-Next to [ievms.sh](https://github.com/xdissent/ievms), `ievms-ruby` also works great in combination with [iectrl](https://github.com/xdissent/iectrl).
+Ruby interface for managing and provisioning IE/Windows Machines from https://modern.ie.
 
 ## WinBoxes supported
 
@@ -23,9 +20,9 @@ Next to [ievms.sh](https://github.com/xdissent/ievms), `ievms-ruby` also works g
 
 * Upload and download files from guest machine
 * Execute cmd.exe and powershell commands on guest machine
-* Execute cmd.exe and powershell commands on guest machine as admin
-* Shortcut commands for Windows guest like `cat`, `ps`, `reboot` and `shutdown`
-* To be used as CLI utility or as library in a ruby script.
+* Execute commands on guest machine as admin
+* CLI with shortcut commands for Windows guests like `cat`, `ps`, `reboot` and `shutdown`
+* Integrated Chocolatey commands to easily install packages
 
 ## Requirements
 
@@ -33,10 +30,6 @@ Next to [ievms.sh](https://github.com/xdissent/ievms), `ievms-ruby` also works g
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads) >= 5.0.6
 * VirtualBox Extension Pack and Guest Additions >= 5.0.6
 * Windows Machines created by [ievms](https://github.com/xdissent/ievms)
-
-### Recommended
-* [iectrl](https://github.com/xdissent/iectrl), cli interface for simple
- ievms admin commands
 
 ## Usage
 
@@ -82,8 +75,6 @@ To run the tests you need to fullfil the testing requirements first:
 * Install VirtualBox >= 5.0.4 at time of writing 5.0.6
 
 * "IE9 - Win7" installed by ievms.sh and make sure its running
-
-* [iectrl](https://github.com/xdissent/iectrl), cli interface for simple
 
 ```bash
 $ npm install iectrl

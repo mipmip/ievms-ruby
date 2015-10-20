@@ -5,11 +5,18 @@ class IevmsRb < Thor
   def initialize(*args)
     super
 
+    #p args
+
     if args[0].count > 0
       @machine = Ievms::WindowsGuest.new args[0][0]
       @machine.verbose = true if options[:verbose]
       @machine.timeout_secs = options[:timeout] if options[:timeout]
     end
+  end
+
+  desc "version", "display version"
+  def version
+    print Ievms::VERSION
   end
 
   desc "cat [vbox name] [file path]", "cat file from path in Win vbox"
@@ -30,10 +37,14 @@ class IevmsRb < Thor
   option :gui, :desc => 'start as gui', :type => :boolean
   desc "start [vbox name]", "Start Win box"
   def start(vbox_name)
-    @machine.headless = false if options[:gui] 
+    @machine.headless = false if options[:gui]
     @machine.start
   end
 
+  desc "restore_clean [vbox name]", "Restore clean snapshot"
+  def restore_clean(vbox_name)
+    @machine.restore_clean_snapshot
+  end
   desc "reboot [vbox name]", "Reboot Win box"
   def reboot(vbox_name)
     @machine.reboot

@@ -1,9 +1,14 @@
 require 'simplecov'
+require 'thor'
+require 'timeout'
 
 SimpleCov.start do
   add_filter '/test/'
   add_filter '/vendor/'
 end
+
+require 'ievms/ievms_cli'
+require 'ievms/windows_guest'
 
 require 'minitest'
 require 'minitest/unit'
@@ -13,6 +18,12 @@ require 'minitest/pride'
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
+machine = Ievms::WindowsGuest.new 'IE9 - Win7'
+machine.headless=true
+machine.verbose=false
+machine.restore_clean_snapshot
+machine = nil
+
 module IevmsRubyTestsShared
 
   def initialize(name = nil)
@@ -21,20 +32,4 @@ module IevmsRubyTestsShared
     super(name) unless name.nil?
   end
 
-  def ensure_machine_running vbox_name
-
-    iectrl = `iectrl status "#{vbox_name}"`
-    if not iectrl.include?('RUNNING')
-      iectrl = `iectrl start "#{vbox_name}"`
-      sleep 5
-      iectrl = `iectrl status "#{vbox_name}"`
-      if not iectrl.include?('RUNNING')
-        iectrl = `VBoxManage startvm --type headless "#{vbox_name}"`
-        sleep 5
-      end
-
-      IevmsRb.start(['ps', "IE9 - Win7"])
-    end
-
-  end
 end

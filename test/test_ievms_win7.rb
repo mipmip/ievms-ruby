@@ -1,14 +1,13 @@
 require 'test_helper'
-require 'ievms/windows_guest'
-require 'timeout'
 
 class TestWin7 < Minitest::Test
 
 include IevmsRubyTestsShared
 
   def setup
-    ensure_machine_running("IE9 - Win7")
     @machine = Ievms::WindowsGuest.new 'IE9 - Win7'
+    @machine.headless=true
+    @machine.start
   end
 
   def test_non_existing_guest
@@ -40,14 +39,14 @@ include IevmsRubyTestsShared
   def test_long_cmd_timeout
     @machine.timeout_secs = 3
     assert_raises {
-      @machine.run_command 'ping 127.0.0.1 -n 6 > nul'
+      @machine.run_command 'ping 127.0.0.1 -n 10 > nul'
     }
   end
 
   def test_long_admin_cmd_timeout
     @machine.timeout_secs = 3
     assert_raises {
-      @machine.run_command_as_admin 'ping 127.0.0.1 -n 6 > nul'
+      @machine.run_command_as_admin 'ping 127.0.0.1 -n 10 > nul'
     }
   end
 

@@ -95,8 +95,8 @@ module Ievms
       run_command 'del C:\Users\IEUser\.tempadminfile', true
     end
 
-    # execute existibg batch file in Windows guest as Administrator
-    def run_command_as_admin(command,quiet=false)
+    # execute existing batch file in Windows guest as Administrator
+    def run_command_as_admin(command,quiet=false, dont_wait=false)
       log_stdout "Executing command as administrator: #{command}", quiet
 
       run_command 'if exist C:\Users\IEUser\ievms.bat del C:\Users\IEUser\ievms.bat && Exit', true
@@ -104,6 +104,11 @@ module Ievms
 
       run_command 'if exist C:\Users\IEUser\ievms.bat del C:\Users\IEUser\ievms_cmd.bat && Exit', true
       upload_string_as_file_to_guest(command, 'C:\Users\IEUser\ievms_cmd.bat', true)
+
+      if(dont_wait)
+        guestcontrol_exec "schtasks.exe", "schtasks.exe /run /tn ievms"
+        return
+      end
 
       _ = Timeout::timeout(@timeout_secs) {
 
@@ -142,11 +147,13 @@ module Ievms
 
     # shutdown windows machine
     def shutdown(quiet=false)
+      log_stdout "Trying to shutdown ...", false if @verbose
       if powered_off?
         log_stdout "Already powered off.", false
       else
         log_stdout "shutting down ...", quiet
-        run_command_as_admin "shutdown.exe /s /f /t 0", quiet
+#        run_command_as_admin "shutdown.exe /s /f /t 0", quiet
+        run_command "shutdown.exe /s /f /t 0", quiet
         wait_for_shutdown
       end
     end
@@ -173,6 +180,15 @@ module Ievms
       log_stdout "rebooting...", quiet
       shutdown(true)
       start(true)
+    end
+
+    def restore_clean_snapshot(quiet=false)
+      log_stdout "Restoring Clean Snapshot ...", quiet
+      shutdown
+      cmd = "VBoxManage snapshot \"#{@vbox_name}\" restore clean"
+      log_stdout cmd, false if @verbose
+      stdout,_,_ = Open3.capture3(cmd)
+      print stdout
     end
 
     # show status of administrative ievms task.
@@ -220,8 +236,28 @@ module Ievms
     end
 
     # end the administrative task
-    def end_ievms_task(quiet)
+    def end_ievms_task(quiet=true)
       run_command('schtasks.exe /End /TN ievms', quiet)
+    end
+
+    # true when machine powered off
+    def powered_off?
+      cmd = "VBoxManage showvminfo \"#{@vbox_name}\" | grep \"State:\""
+      print cmd if @verbose
+      out = `#{cmd}`
+      print out if @verbose
+      if out.include?('powered off') || out.include?('aborted')
+        return true
+      end
+    end
+
+    # return true when run level is 3 boot complete
+    def boot_complete?
+      out = `VBoxManage showvminfo "#{@vbox_name}" | grep 'Additions run level:'`
+      print out if @verbose
+      if out[-2..-2].to_i == 3
+        return true
+      end
     end
 
     ###############################################################
@@ -229,6 +265,7 @@ module Ievms
     private
 
     def log_stdout(msg, quiet=true)
+      quiet = false if @verbose
       print "[#{@vbox_name}] #{msg}\n" unless quiet
     end
 
@@ -247,7 +284,6 @@ module Ievms
 
     end
 
-
     # Pause execution until guest control is available for a virtual machine
     def wait_for_guestcontrol
       until boot_complete? do
@@ -259,7 +295,7 @@ module Ievms
     # Pause execution until guest machine has shut down
     def wait_for_shutdown
       until powered_off? do
-        print "Waiting for #{@vbox_name} to be finish shutdown...\n" if @verbose
+        print "Waiting for #{@vbox_name} to be finished shutdown...\n" if @verbose
         sleep 3
       end
     end
@@ -280,21 +316,6 @@ module Ievms
       end
     end
 
-    # true when machine powered off
-    def powered_off?
-      out = `VBoxManage showvminfo "#{@vbox_name}" | grep "State:"`
-      if out.include?('powered off')
-        return true
-      end
-    end
-
-    # return true when run level is 3 boot complete
-    def boot_complete?
-      out = `VBoxManage showvminfo "#{@vbox_name}" | grep 'Additions run level:'`
-      if out[-2..-2].to_i == 3
-        return true
-      end
-    end
 
   end
 end
