@@ -52,6 +52,8 @@ $ ievmsrb help
 
 Commands:
   ievmsrb cat [vbox name] [file path]                             # cat file from path in Win vbox
+  ievmsrb choco_inst [vbox name] [package]                        # Install package in win box with Chocolatey
+  ievmsrb choco_uninst [vbox name] [package]                      # Uninstall package in win box with Chocolatey
   ievmsrb cmd [vbox name] [command to execute]                    # Run command with cmd.exe in Win vbox
   ievmsrb cmd_adm [vbox name] [command to execute]                # Run command as Administrator with cmd.exe in Win vbox
   ievmsrb copy_from [vbox name] [path in vbox] [local file]       # Copy file from Win vbox to local path
@@ -59,8 +61,17 @@ Commands:
   ievmsrb copy_to_as_adm [vbox name] [local file] [path in vbox]  # Copy local file to Win vbox as Administrator
   ievmsrb help [COMMAND]                                          # Describe available commands or one specific command
   ievmsrb ps [vbox name]                                          # Show running tasks in Win vbox
+  ievmsrb pwrsh_as_adm [vbox name] [command to execute]           # Run command as Administrator with PowerShell in Win vbox
   ievmsrb reboot [vbox name]                                      # Reboot Win box
+  ievmsrb reset_ievms_taskmgr [vbox name]                         # Reset ievms task manager
+  ievmsrb restore_clean [vbox name]                               # Restore clean snapshot
   ievmsrb shutdown [vbox name]                                    # Shutdown Win vbox
+  ievmsrb start [vbox name]                                       # Start Win box
+  ievmsrb version                                                 # display version
+
+Options:
+  -v, [--verbose], [--no-verbose]  # Be more verbose
+      [--timeout=N]                # Timeout in seconds
 ```
 
 Read the docs for more info about [ievms-ruby CLI usage](http://mipmip.github.io/ievms-ruby/cli/).
@@ -77,9 +88,7 @@ To run the tests you need to fullfil the testing requirements first:
 * "IE9 - Win7" installed by ievms.sh and make sure its running
 
 ```bash
-$ npm install iectrl
-$ echo 'PATH="$HOME/node_modules/.bin:$PATH"' >> ~/.profile
-$ source ~/.Provider
+curl -s https://raw.githubusercontent.com/xdissent/ievms/master/ievms.sh | env IEVMS_VERSIONS="9" bash
 ```
 
 * Create an new virtual machine called `standbymachine`. Keep the disk size as
