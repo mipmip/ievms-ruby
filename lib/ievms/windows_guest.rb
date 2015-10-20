@@ -183,13 +183,13 @@ module Ievms
 
     # install choco package(s)
     def choco_install(pkg, quiet=false)
-      if chocolatey?
-        log_stdout "Installing with choco: #{pkg} \n", quiet
-        run_powershell_cmd_as_admin("choco install -y #{pkg}", false)
-      else
+      if ! chocolatey?
         log_stdout "First time.. installing Chocolatey first", quiet
         install_chocolatey
       end
+
+      log_stdout "Installing with choco: #{pkg} \n", quiet
+      run_powershell_cmd_as_admin("choco install -y #{pkg}", false)
     end
 
     # uninstall package(s)
@@ -205,7 +205,6 @@ module Ievms
     # is chocolatey installed
     def chocolatey?
       out = run_command_as_admin('@powershell -Command "choco"',false)
-      p out
       if out.include?("CommandNotFoundException")
         return false
       else
@@ -216,17 +215,18 @@ module Ievms
     # install the Chocolatey Package Manager for Windows
     def install_chocolatey(quiet=false)
       log_stdout "Installing Chocolatey", quiet
-      #    run_powershell_cmd_as_admin("iex ((new-object net.webclient).DownloadString(\'https://chocolatey.org/install.ps1\'))")
-      #    run_command_as_admin('SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin')
       run_command_as_admin('@powershell -NoProfile -ExecutionPolicy unrestricted -Command "(iex ((new-object net.webclient).DownloadString(\'https://chocolatey.org/install.ps1\'))) >$null 2>&1" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin')
       reboot
     end
 
+    # end the administrative task
+    def end_ievms_task(quiet)
+      run_command('schtasks.exe /End /TN ievms', quiet)
+    end
 
     ###############################################################
 
     private
-
 
     def log_stdout(msg, quiet=true)
       print "[#{@vbox_name}] #{msg}\n" unless quiet
@@ -247,10 +247,6 @@ module Ievms
 
     end
 
-    # end the administrative task
-    def end_ievms_task(quiet)
-      run_command('schtasks.exe /End /TN ievms', quiet)
-    end
 
     # Pause execution until guest control is available for a virtual machine
     def wait_for_guestcontrol
