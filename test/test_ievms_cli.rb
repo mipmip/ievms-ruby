@@ -97,16 +97,18 @@ class TestWin7 < Minitest::Test
     assert_match(/winlogon\.exe/, out)
   end
 
-  def test_pwrsh_as_adm
-    p run_thor_capture(['pwrsh_as_adm', "IE9 - Win7", 'curl'])
-  end
+  #def test_pwrsh_as_adm
+  # p run_thor_capture(['pwrsh_as_adm', "IE9 - Win7", 'curl'])
+  #end
 
+  # takes 5 minutes
   def test_choco
-    p run_thor_capture(['choco_uninst', "IE9 - Win7", 'curl'])
+    cmd1 = run_thor_capture(['choco_uninst', "IE9 - Win7", 'curl'])
+    assert_match(/Chocolatey\ is\ not\ installed,\ guess\ you/,cmd1)
     run_thor(['choco_inst', "IE9 - Win7", 'curl'])
-    p run_thor_capture(['cmd', "IE9 - Win7", 'curl'])
+    p run_thor_capture(['cmd_as_adm', "IE9 - Win7", 'curl'])
     run_thor(['choco_uninst', "IE9 - Win7", 'curl'])
-    p run_thor_capture(['cmd', "IE9 - Win7", 'curl'])
+    p run_thor_capture(['cmd_as_adm', "IE9 - Win7", 'curl'])
   end
 
   def test_reset_ievms_taskmgr
