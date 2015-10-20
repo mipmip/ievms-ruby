@@ -85,6 +85,11 @@ class IevmsRb < Thor
     @machine.choco_uninstall pkg
   end
 
+  desc "reset_ievms_taskmgr [vbox name]", "Reset ievms task manager"
+  def reset_ievms_taskmgr(vbox_name)
+    @machine.end_ievms_task
+  end
+
   private
 
 end
