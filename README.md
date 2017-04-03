@@ -16,6 +16,10 @@ Ruby interface for managing and provisioning IE/Windows Machines from https://mo
 ![win8](https://img.shields.io/badge/Win8-success-brightgreen.svg)
 ![win10](https://img.shields.io/badge/Win10-unknown-lightgrey.svg)
 
+## Call for maintainer
+
+I've stopped working on this project. If you find this project useful and want to take over please reply [to issue #29](https://github.com/mipmip/ievms-ruby/issues/29)
+
 ## Features
 
 * Upload and download files from guest machine
